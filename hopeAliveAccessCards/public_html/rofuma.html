@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Hope Alive Online Radio | Employee Verification Portal</title>
+  <!-- Bootstrap 5 CSS + Icons + Google Fonts -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* =========================================================
+       DESIGN TOKENS
+    ========================================================= */
+    :root{
+      --bg-top:#eef2f8;
+      --bg-bottom:#f8f9fb;
+      --ink:#1c2433;
+      --muted:#6b7585;
+      --line:#e7eaf0;
+      --card:#ffffff;
+      --blue:#2f5fe0;
+      --blue-soft:#eaf0fe;
+      --green:#1c9d63;
+      --green-soft:#e7f7ef;
+      --green-line:#bfe8d4;
+      --radius-lg:22px;
+      --radius-md:14px;
+      --radius-sm:10px;
+      --shadow-soft:0 10px 26px -14px rgba(28,36,51,.18);
+      --shadow-card:0 24px 60px -28px rgba(28,36,51,.28);
+      --mono: 'SFMono-Regular', Menlo, Consolas, 'Roboto Mono', monospace;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      font-family:'Inter', sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #f1f5fe 0%, transparent 60%),
+        radial-gradient(1000px 500px at 110% 10%, #eafaf1 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+      min-height:100vh;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* =========================================================
+       LOGO
+    ========================================================= */
+    .company-logo{
+      height:60px;
+      width:auto;
+      max-width:100%;
+      object-fit:contain;
+      display:block;
+    }
+    @media (max-width:768px){
+      .company-logo{ height:42px; }
+    }
+
+    /* =========================================================
+       NAVBAR
+    ========================================================= */
+    .navbar{
+      background:rgba(255,255,255,.85) !important;
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--line);
+      box-shadow:none !important;
+    }
+    .navbar .nav-link{
+      font-size:.92rem;
+      font-weight:500;
+      color:var(--muted);
+      padding:.5rem 1rem !important;
+      border-radius:999px;
+      transition:color .2s ease, background-color .2s ease;
+    }
+    .navbar .nav-link:hover{
+      color:var(--blue);
+      background:var(--blue-soft);
+    }
+
+    /* =========================================================
+       VERIFICATION STATUS BAR  (was: large green banner)
+    ========================================================= */
+    .verification-banner{
+      background:var(--green-soft);
+      border-bottom:1px solid var(--green-line);
+      padding:.55rem 0;
+    }
+    .verification-banner .container{
+      gap:.6rem !important;
+    }
+    .verification-banner i.bi-patch-check-fill{
+      font-size:1.15rem !important;
+      color:var(--green);
+    }
+    .verification-banner h2{
+      font-size:.82rem !important;
+      font-weight:700 !important;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      color:var(--green);
+      margin:0;
+      line-height:1.2;
+    }
+    .verification-banner p{
+      font-size:.76rem;
+      color:#3f7a5d;
+      margin:0;
+    }
+    @media (max-width:576px){
+      .verification-banner{ text-align:center; }
+      .verification-banner h2{ font-size:.74rem !important; }
+      .verification-banner p{ font-size:.7rem; }
+    }
+
+    /* =========================================================
+       MAIN CARD
+    ========================================================= */
+    .verification-card{
+      border-radius:var(--radius-lg) !important;
+      box-shadow:var(--shadow-card) !important;
+      background:linear-gradient(180deg, #ffffff 0%, #fbfcfe 100%);
+      border:1px solid var(--line);
+    }
+
+    /* Verified seal / status badge */
+    .status-badge-large{
+      margin-bottom:1.75rem !important;
+    }
+    .verified-badge{
+      background:var(--green-soft) !important;
+      color:var(--green) !important;
+      border:1px solid var(--green-line);
+      font-size:.85rem !important;
+      font-weight:700;
+      letter-spacing:.05em;
+      padding:.55rem 1.4rem !important;
+      box-shadow:0 0 0 6px rgba(28,157,99,.06);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .verified-badge:hover{
+      transform:translateY(-1px);
+      box-shadow:0 0 0 8px rgba(28,157,99,.08);
+    }
+    .verified-badge i{ color:var(--green); }
+
+    /* Profile section */
+    .profile-img-wrapper{
+      width:110px;
+      height:110px;
+    }
+    .employee-photo{
+      width:110px;
+      height:110px;
+      object-fit:cover;
+      border:4px solid #fff;
+      box-shadow:var(--shadow-soft);
+      transition:transform .25s ease;
+    }
+    .employee-photo:hover{
+      transform:scale(1.03);
+    }
+    @media (min-width:768px){
+      .profile-img-wrapper, .employee-photo{ width:128px; height:128px; }
+    }
+
+    .row.align-items-center.mb-4.pb-2.border-bottom{
+      border-bottom:1px solid var(--line) !important;
+      padding-bottom:1.5rem !important;
+    }
+
+    .row.align-items-center.mb-4.pb-2.border-bottom h3{
+      font-size:1.4rem;
+      letter-spacing:-.01em;
+    }
+
+    .row.align-items-center.mb-4.pb-2.border-bottom .badge{
+      font-weight:500;
+      font-size:.78rem;
+    }
+    .row.align-items-center.mb-4.pb-2.border-bottom .badge.bg-success{
+      background-color:var(--green-soft) !important;
+      color:var(--green) !important;
+    }
+    .row.align-items-center.mb-4.pb-2.border-bottom .badge.bg-primary{
+      background-color:var(--blue-soft) !important;
+      color:var(--blue) !important;
+    }
+
+    /* Info rows */
+    .info-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:1rem;
+      padding:.7rem 0;
+      border-bottom:1px solid var(--line);
+    }
+    .info-row:last-child{
+      border-bottom:none;
+    }
+    .info-label{
+      font-size:.72rem;
+      font-weight:600;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+    .info-value{
+      font-size:.95rem;
+      font-weight:600;
+      color:var(--ink);
+      text-align:right;
+    }
+
+    /* Authorization / emergency section */
+    .emergency-section{
+      background:var(--blue-soft);
+      border:1px solid #dde6fc;
+    }
+    .emergency-section h5{
+      font-size:1rem;
+    }
+    .emergency-section .row.row-cols-2 .col{
+      font-size:.88rem;
+      color:var(--ink);
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:var(--radius-sm);
+      padding:.5rem .65rem;
+    }
+
+    /* Contact / verification desk */
+    .contact-verify-section{
+      border:1px solid var(--line) !important;
+      border-radius:var(--radius-md) !important;
+      background:#fff !important;
+    }
+    .contact-verify-section h5{ font-size:1rem; }
+    .contact-verify-section .col-md-6{
+      font-size:.9rem;
+      color:var(--ink);
+    }
+
+    /* Timestamp + security badges */
+    .row.g-3.mb-4.align-items-center .bg-light{
+      background:var(--bg-top) !important;
+      border:1px solid var(--line);
+      border-radius:var(--radius-md) !important;
+      font-size:.88rem;
+    }
+    .security-badge .badge.bg-success{
+      background-color:var(--green) !important;
+      font-weight:500;
+      letter-spacing:.02em;
+    }
+    .security-badge span:last-child{
+      font-size:.88rem;
+      color:var(--muted);
+    }
+
+    /* =========================================================
+       VERIFICATION CODE BLOCK
+    ========================================================= */
+    .verification-code-area{
+      background:linear-gradient(135deg, #1c2433 0%, #2b3a55 100%) !important;
+      border-radius:var(--radius-md) !important;
+      color:#f1f4fa;
+      padding:1.25rem !important;
+    }
+    .verification-code-area small.text-secondary{
+      color:#a9b6cf !important;
+      font-size:.68rem;
+      letter-spacing:.1em;
+    }
+    .verification-code-area code#uniqueVerificationCode{
+      font-family:var(--mono);
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      color:#9fd6ff;
+      padding:.35rem .75rem;
+      border-radius:8px;
+      letter-spacing:.08em;
+      font-size:.95rem !important;
+    }
+    .verification-code-area small.text-muted{
+      color:#90a0bd !important;
+    }
+    #copyCodeBtn{
+      border-color:rgba(255,255,255,.35);
+      color:#f1f4fa;
+      background:transparent;
+      font-size:.82rem;
+      border-radius:999px;
+      padding:.4rem 1rem;
+      transition:all .2s ease;
+    }
+    #copyCodeBtn:hover{
+      background:rgba(255,255,255,.12);
+      border-color:rgba(255,255,255,.5);
+      color:#fff;
+    }
+    #printDetailsBtn{
+      border-color:rgba(255,255,255,.35);
+      color:#f1f4fa;
+      background:transparent;
+      border-radius:999px;
+      padding:.5rem 1.25rem;
+      font-size:.85rem;
+      transition:all .2s ease;
+    }
+    #printDetailsBtn:hover{
+      background:rgba(255,255,255,.12);
+      border-color:rgba(255,255,255,.5);
+      color:#fff;
+    }
+
+    /* =========================================================
+       ADDITIONAL INFO (collapse)
+    ========================================================= */
+    .additional-info > div[data-bs-toggle="collapse"]{
+      border:1px solid var(--line) !important;
+      border-radius:var(--radius-md) !important;
+      background:#fff !important;
+      transition:background-color .2s ease, border-color .2s ease;
+      cursor:pointer;
+    }
+    .additional-info > div[data-bs-toggle="collapse"]:hover{
+      background:var(--bg-top) !important;
+      border-color:#dde3ec !important;
+    }
+    .additional-info .bi-chevron-down{
+      transition:transform .25s ease;
+    }
+    .additional-info > div[aria-expanded="true"] .bi-chevron-down{
+      transform:rotate(180deg);
+    }
+    .additional-info .card.card-body{
+      border-radius:var(--radius-md) !important;
+      background:var(--bg-top) !important;
+      font-size:.9rem;
+    }
+    .additional-info .card.card-body .col-sm-6{
+      padding:.35rem 0;
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+    .footer{
+      border-top:1px solid var(--line);
+      background:transparent;
+      color:var(--muted);
+      font-size:.85rem;
+    }
+    .footer h6{
+      font-weight:700;
+      color:var(--ink);
+      letter-spacing:.02em;
+    }
+    .footer-link{
+      color:var(--muted);
+      transition:color .2s ease;
+    }
+    .footer-link:hover{
+      color:var(--blue);
+    }
+
+    /* =========================================================
+       RESPONSIVE TWEAKS
+    ========================================================= */
+    @media (max-width:576px){
+      .verification-card .card-body{ padding:1.5rem !important; }
+      .verification-code-area{ flex-direction:column; align-items:stretch !important; }
+      .verification-code-area > div:first-child{ margin-bottom:1rem; }
+      #printDetailsBtn{ width:100%; }
+      .security-badge{ justify-content:flex-start !important; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      .employee-photo, .verified-badge, #copyCodeBtn, #printDetailsBtn,
+      .additional-info .bi-chevron-down, .additional-info > div[data-bs-toggle="collapse"]{
+        transition:none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <img src="images/hope-alive-radio.png" alt="Hope Alive Radio" class="company-logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Employee Verification</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="verification-banner">
+    <div class="container d-flex align-items-center justify-content-center gap-3 flex-wrap">
+      <i class="bi bi-patch-check-fill fs-1"></i>
+      <div>
+        <h2 class="mb-0 fw-bold">✓ VERIFIED EMPLOYEE · ACTIVE STATUS</h2>
+        <p class="mb-0">Authorized representative of Media House South Africa</p>
+      </div>
+    </div>
+  </div>
+
+  <main class="container my-5" id="home">
+    <div class="row justify-content-center" id="verificationCard">
+      <div class="col-lg-10 col-xl-9">
+        <div class="card verification-card shadow-lg border-0 rounded-4 overflow-hidden">
+          <div class="card-body p-4 p-md-5">
+
+            <div class="status-badge-large text-center mb-4">
+              <span class="badge verified-badge px-4 py-2 fs-4 rounded-pill"><i class="bi bi-check-circle-fill me-2"></i>VERIFIED EMPLOYEE ✓</span>
+            </div>
+
+            <div class="row align-items-center mb-4 pb-2 border-bottom">
+              <div class="col-md-3 text-center text-md-start mb-3 mb-md-0">
+                <div class="profile-img-wrapper mx-auto mx-md-0">
+                  <img src="images/rofuma.png" alt="Employee profile" class="rounded-circle img-fluid employee-photo" id="profileImage">
+                </div>
+              </div>
+              <div class="col-md-9">
+                <h3 id="empName" class="fw-bold mb-1">Rafuma Mufamadi</h3>
+                <p class="text-muted"><i class="bi bi-person-badge me-1"></i> <span id="empNumber">HAR-INT-004</span> · <span id="empDept">Information Technology</span></p>
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                  <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill"><i class="bi bi-check2-circle"></i> Active</span>
+                  <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill"><i class="bi bi-geo-alt-fill"></i> <span id="officeLocation">Johannesburg</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+              <div class="col-md-6">
+                <div class="info-row"><span class="info-label">Full Name</span><span class="info-value" id="fullName">Rafuma Mufamadi</span></div>
+                <div class="info-row"><span class="info-label">Employee Number</span><span class="info-value" id="employeeNumber">HAR-INT-004</span></div>
+                <div class="info-row"><span class="info-label">Department</span><span class="info-value" id="department">Information Technology</span></div>
+                <div class="info-row"><span class="info-label">Position</span><span class="info-value" id="position">Full-stack developer/Technical Support</span></div>
+              </div>
+              <div class="col-md-6">
+                <div class="info-row"><span class="info-label">Employment Status</span><span class="info-value text-success fw-semibold" id="employmentStatus">Active</span></div>
+                <div class="info-row"><span class="info-label">Office Location</span><span class="info-value" id="office">Johannesburg</span></div>
+                <div class="info-row"><span class="info-label">Date Issued</span><span class="info-value" id="dateIssued">001 April 2026</span></div>
+                <div class="info-row"><span class="info-label">ID Expiry Date</span><span class="info-value" id="expiryDate">31 May 2027</span></div>
+              </div>
+            </div>
+
+            <div class="emergency-section p-3 p-md-4 rounded-3 mb-4">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <i class="bi bi-shield-check fs-3 text-primary"></i>
+                <h5 class="mb-0 fw-bold">Authorization & Access</h5>
+              </div>
+              <p class="mb-2"><strong>Employee currently authorized to represent the company.</strong> <i class="bi bi-check-lg text-success"></i></p>
+              <p class="mb-2 fw-semibold">Permitted to attend:</p>
+              <div class="row row-cols-2 row-cols-md-3 g-2">
+                <div class="col"><i class="bi bi-mic-fill text-primary me-1"></i> Press Conferences</div>
+                <div class="col"><i class="bi bi-newspaper me-1"></i> Media Briefings</div>
+                <div class="col"><i class="bi bi-people-fill me-1"></i> Public Events</div>
+                <div class="col"><i class="bi bi-building me-1"></i> Government Events</div>
+                <div class="col"><i class="bi bi-briefcase-fill me-1"></i> Corporate Functions</div>
+                <div class="col"><i class="bi bi-camera-video-fill me-1"></i> News Reporting Assignments</div>
+              </div>
+            </div>
+
+            <div class="contact-verify-section mb-4 p-3 p-md-4 bg-white rounded-3 border" id="contactVerification">
+              <h5 class="fw-bold mb-3"><i class="bi bi-headset"></i> Contact & Verification Desk</h5>
+              <div class="row g-3">
+                <div class="col-md-6"><i class="bi bi-telephone-fill text-secondary me-2"></i> HR Contact: <strong>+2774 455 5461</strong></div>
+                <div class="col-md-6"><i class="bi bi-chat-dots-fill text-secondary me-2"></i> Media Desk: <strong>+2774 455 5461</strong></div>
+                <div class="col-md-6"><i class="bi bi-envelope-fill text-secondary me-2"></i> Email: <strong>info@hopealiveradio.co.za</strong></div>
+                <div class="col-md-6"><i class="bi bi-globe2 me-2"></i> Website: <strong>www.hopealiveradio.co.za</strong></div>
+              </div>
+            </div>
+
+            <div class="row g-3 mb-4 align-items-center">
+              <div class="col-md-6">
+                <div class="bg-light p-3 rounded-3">
+                  <p class="mb-1"><i class="bi bi-clock-history"></i> <strong>Verification Time:</strong> <span id="verificationTimestamp">--:--:--</span></p>
+                  <p class="mb-0"><i class="bi bi-calendar-check"></i> <strong>Last Updated:</strong> <span id="lastUpdatedDate">01 June 2026</span></p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="security-badge d-flex flex-wrap align-items-center justify-content-md-end gap-3">
+                  <span class="badge bg-success text-white px-3 py-2 rounded-pill"><i class="bi bi-shield-fill-check"></i> QR Verified</span>
+                  <span><i class="bi bi-shield-lock-fill text-primary fs-5"></i> Green Shield</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="verification-code-area bg-dark bg-opacity-5 p-3 rounded-3 mb-4 d-flex flex-wrap justify-content-between align-items-center">
+              <div>
+                <small class="text-uppercase text-secondary fw-semibold">unique verification code</small>
+                <div class="d-flex align-items-center gap-2">
+                  <code id="uniqueVerificationCode" class="fs-6 fw-bold">MHV-8D93F2</code>
+                  <button class="btn btn-sm btn-outline-primary" id="copyCodeBtn"><i class="bi bi-files"></i> Copy</button>
+                </div>
+                <div><small class="text-muted"><i class="bi bi-database"></i> This employee record is stored in the company database.</small></div>
+              </div>
+              <button class="btn btn-outline-secondary mt-2 mt-sm-0" id="printDetailsBtn"><i class="bi bi-printer"></i> Print Details</button>
+            </div>
+
+            <div class="additional-info mt-3">
+              <div class="d-flex justify-content-between align-items-center p-3 bg-white border rounded-3 cursor-pointer" data-bs-toggle="collapse" data-bs-target="#collapseExtra" aria-expanded="false" aria-controls="collapseExtra">
+                <span class="fw-semibold"><i class="bi bi-plus-circle"></i> Additional Employee Information</span>
+                <i class="bi bi-chevron-down"></i>
+              </div>
+              <div class="collapse mt-3" id="collapseExtra">
+                <div class="card card-body bg-light border-0">
+                  <div class="row g-3">
+                    <div class="col-sm-6"><i class="bi bi-envelope"></i> <strong>Work Email:</strong> info@hopealiveradio.co.za</div>
+                    <div class="col-sm-6"><i class="bi bi-person-workspace"></i> <strong>Supervisor:</strong> Hlangalezwe Mthethwa </div>
+                    <div class="col-sm-6"><i class="bi bi-calendar-date"></i> <strong>Employment Start Date:</strong> 01 April 2026</div>
+                    <div class="col-sm-6"><i class="bi bi-truck"></i> <strong>Vehicle Registration:</strong> N/A)</div>
+                    <div class="col-sm-6"><i class="bi bi-camera"></i> <strong>Equipment Assigned:</strong> Camera Kit, Laptop, Audio Recorder</div>
+                    <div class="col-sm-6"><i class="bi bi-heart"></i> <strong>Emergency Contact:</strong> +2774 455 5461</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer mt-5 pt-4 pb-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <h6>Hope Alive Online Radio</h6>
+          <p class="small">1 Wanderers Street, JHB Central, Johannesburg, 2000<br>© Hope Alive Online Radio. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <a href="#" class="text-decoration-none me-3 footer-link">Privacy Policy</a>
+          <a href="#" class="text-decoration-none footer-link">Terms of Use</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
